@@ -8,7 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-public class MonsterCtrl : MonoBehaviour
+public class MonsterCtrl : PoolableMono
 {
     public UnityEvent OnDamageCast;
 
@@ -76,18 +76,19 @@ public class MonsterCtrl : MonoBehaviour
                         agent.isStopped = true;
                         anim.SetTrigger(hashDie);
                         GetComponent<CapsuleCollider>().enabled = false;
+                        yield return new WaitForSeconds(1);
+                        PoolManager.Instance.Push(this);
                     }
                     break;
             }
             yield return new WaitForSeconds(0.3f);
         }
     }
-
     private bool CheckPlayer()
     {
         Vector3 bias = transform.forward;
         Vector3 pos = transform.position;
-        pos.y += 1;
+        pos.y += 1.8f;
         for (int i = -60; i < 60; i += 10)
         {
             Vector3 dir = Quaternion.Euler(0, i, 0) * bias;
@@ -130,11 +131,11 @@ public class MonsterCtrl : MonoBehaviour
 
             float dist = (playerTr.position - transform.position).sqrMagnitude;
 
-            if ((dist <= attackDist * attackDist) && CheckPlayer())
+            if ((dist <= attackDist * attackDist)/* && CheckPlayer()*/)
             {
                 state = State.ATTACK;
             }
-            else if ((dist <= traceDist * traceDist) && CheckPlayer())
+            else if ((dist <= traceDist * traceDist) /*&& CheckPlayer()*/)
             {
                 state = State.TRACE;
             }
@@ -149,5 +150,10 @@ public class MonsterCtrl : MonoBehaviour
     public void OnAnimationHit()
     {
         OnDamageCast?.Invoke();
+    }
+
+    public override void Init()
+    {
+        Debug.Log("Init");
     }
 }

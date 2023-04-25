@@ -1,5 +1,55 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &648314738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 648314739}
+  - component: {fileID: 648314740}
+  m_Layer: 0
+  m_Name: DamageCaster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &648314739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648314738}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5281535336297379367}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &648314740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648314738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b772866c092891940bafb8350fed7034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  casterRadius: 1
+  casterInterpolation: 0.1
+  monsterDamage: 2
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &5281535336297146881
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,6 +156,7 @@ GameObject:
   - component: {fileID: 5281535336297245925}
   - component: {fileID: 5281535336297245946}
   - component: {fileID: 5281535336297245947}
+  - component: {fileID: 1323531}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -138,6 +189,7 @@ Transform:
   - {fileID: 5281535336297379357}
   - {fileID: 5281535336297379353}
   - {fileID: 5281535336297379815}
+  - {fileID: 648314739}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -151,7 +203,7 @@ Animator:
   m_GameObject: {fileID: 5281535336297146887}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 114cb4bcf81314b65b611fcc4f346ee1, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 10d0d803e37bc1346a977196beba7bf1, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -210,10 +262,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129a4b5a30a6891448c56564f1dd6694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDamageCast:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 648314740}
+        m_TargetAssemblyTypeName: DamageCaster, Assembly-CSharp
+        m_MethodName: DamageCast
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   state: 0
   traceDist: 10
   attackDist: 2
   isDie: 0
+--- !u!114 &1323531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5281535336297146887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2b7442ce4e5f44686168fb39eb9a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initHealth: 100
 --- !u!1 &5281535336297146889
 GameObject:
   m_ObjectHideFlags: 0

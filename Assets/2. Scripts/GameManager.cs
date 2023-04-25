@@ -1,23 +1,27 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
-using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Enemy Create Info")]
-    public List<Transform> points = new List<Transform>();
-    public List<GameObject> monsterPool = new List<GameObject>();
-    public GameObject monster;
-    public float createTime = 2.0f;
-    public int maxMonster = 10;
+    public List<Transform> points = new List<Transform>(); // 몬스터 출현 위치 저장
+    public List<GameObject> monsterPool = new List<GameObject>(); // 몬스터 오브젝트 풀
+    public GameObject monster; //  몬스터 프리팹 연결할 변수
+    public float createTime = 2.0f; // 
+    public int maxMonster = 10; // 오브젝트 풀에 생성할 몬스터의 최대 개수
+
+    [SerializeField] private PoolListSO initList;
+
+    private void Awake()
+    {
+    }
 
     private void Start()
     {
         HideCursor(true);
+        CreatePool();
+
+        //CreateMonsterPool(); 
 
         Transform spawnPointGroup = GameObject.Find("SpawnPointGroup")?.transform;
 
@@ -29,18 +33,32 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("CreateMonster", 2.0f, createTime);
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            HideCursor(false);
+        }
+        if (Input.GetMouseButton(1))
+        {
+            HideCursor(true);
+        }
+    }
+
     private void HideCursor(bool state)
     {
         Cursor.lockState = state ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !state;
     }
+
     public void CreateMonsterPool()
     {
-        // 최대로 만들 수 있는 몬스터의 수 만큼 몬스터 오브젝트를 생성
         for (int i = 0; i < maxMonster; i++)
         {
             var _monster = Instantiate<GameObject>(monster);
-            _monster.name = $"Monster_{i:00}";
+
+            _monster.name = $"Monster_{i}";
+
             _monster.SetActive(false);
 
             monsterPool.Add(_monster);
@@ -49,23 +67,39 @@ public class GameManager : MonoBehaviour
 
     public void CreateMonster()
     {
+        //int idx = Random.Range(0, points.Count);
+
+        //GameObject _moster = GetMonsterInPool();
+
+        //_moster?.transform.SetPositionAndRotation(points[idx].position, points[idx].rotation);
+
+        //_moster?.SetActive(true);
+
+        MonsterCtrl m = PoolManager.Instance.Pop("Monster") as MonsterCtrl;
+
         int idx = Random.Range(0, points.Count);
-        GameObject _monster = GetMonsterInPool();
-
-        _monster?.transform.SetPositionAndRotation(points[idx].position, points[idx].rotation);
-
-        _monster?.SetActive(true);
+        m?.transform.SetPositionAndRotation(points[idx].position, points[idx].rotation);
     }
 
     private GameObject GetMonsterInPool()
     {
         foreach (var _monster in monsterPool)
         {
-            if(_monster.activeSelf == false)
+            if (!_monster.activeSelf)
             {
                 return _monster;
             }
         }
+
         return null;
+    }
+
+    private void CreatePool()
+    {
+        PoolManager.Instance = new PoolManager(transform);
+        initList.Pairs.ForEach(p =>
+        {
+            PoolManager.Instance.CreatePool(p.Prefab, p.count);
+        });
     }
 }
