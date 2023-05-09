@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     CharacterController characterController;
     PlayerInput playerInput;
 
+    public GameObject followCamPos;
+
     private Animator animator;
 
     // Start is called before the first frame update
@@ -24,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     void LateUpdate()
     {
         PlayerMove();
-        //PlayerRotate();
+        PlayerRotate();
         UpdateAnimation(playerInput.moveDir);
     }
 
@@ -34,14 +36,15 @@ public class PlayerMovement : MonoBehaviour
         characterController.Move(dir * moveSpeed * Time.deltaTime);
     }
 
- 
-    void PlayerRotate()
+
+    private void PlayerRotate()
     {
-        Vector3 target = playerInput.mousePos;
-        Vector3 dir = target - transform.position;
-        dir.y = 0;
-        transform.rotation = Quaternion.LookRotation(dir.normalized);
-        
+        float mouseX = playerInput.mouseX;
+        float mouseY = playerInput.mouseY;
+        mouseY = Mathf.Clamp(mouseY, -60f, 60f);
+
+        transform.eulerAngles = new Vector3(0, mouseX, 0);
+        followCamPos.transform.eulerAngles = new Vector3(-mouseY, mouseX, 0);
     }
 
     private void UpdateAnimation(Vector2 moveInput)
@@ -49,5 +52,4 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Vertical Move", moveInput.y);
         animator.SetFloat("Horizontal Move", moveInput.x);
     }
-
 }

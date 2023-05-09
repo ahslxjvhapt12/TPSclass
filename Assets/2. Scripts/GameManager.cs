@@ -12,8 +12,19 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private PoolListSO initList;
 
+    bool isGameOver;
+    public int score = 0;
+
+    static public GameManager instance;
+
     private void Awake()
     {
+        if(instance != null)
+        {
+            Debug.LogWarning("Multiple GameManager is running");
+            Destroy(gameObject);
+        }
+        instance = this;
     }
 
     private void Start()
@@ -101,5 +112,10 @@ public class GameManager : MonoBehaviour
         {
             PoolManager.Instance.CreatePool(p.Prefab, p.count);
         });
+    }
+
+    public void AddScore(int newScore)
+    {
+        score += newScore;
     }
 }

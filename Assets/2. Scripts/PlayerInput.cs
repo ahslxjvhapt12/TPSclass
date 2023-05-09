@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-
-
     [SerializeField]
     private LayerMask whatIsGround;
 
@@ -17,6 +15,7 @@ public class PlayerInput : MonoBehaviour
 
     public Vector2 moveDir { get; private set; }
     public float mouseX { get; private set; }
+    public float mouseY { get; private set; }
 
     public bool isJump { get; private set; }
     public bool reload { get; private set; }
@@ -28,6 +27,7 @@ public class PlayerInput : MonoBehaviour
     private void Awake()
     {
         mainCam = Camera.main;
+        mouseX = mouseY = 0;
     }
     // Start is called before the first frame update
 
@@ -38,7 +38,8 @@ public class PlayerInput : MonoBehaviour
         float y = Input.GetAxis("Vertical");
         moveDir = new Vector2(x, y);
 
-        mouseX = Input.GetAxis("Mouse X");
+        mouseX += Input.GetAxis("Mouse X");
+        mouseY += Input.GetAxis("Mouse Y");
 
         reload = Input.GetButtonDown("Reload");
         fire = Input.GetButtonDown("Fire1");
