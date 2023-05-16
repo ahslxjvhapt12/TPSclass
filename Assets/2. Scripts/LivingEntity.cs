@@ -12,7 +12,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public bool dead { get; protected set; } // 사망 상태
     public event Action onDeath; // 사망 시 발동할 이벤트
-    
+
     protected virtual void OnEnable()
     {
         health = initHealth;

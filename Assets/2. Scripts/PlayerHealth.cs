@@ -5,13 +5,12 @@ using UnityEngine.SearchService;
 
 public class PlayerHealth : LivingEntity
 {
-
-
     public override void OnDamage(float damage, Vector3 hitPosition, Vector3 hitNormal)
     {
         Debug.Log(1);
         CameraAction.Instance.ShakeCam(6, 1);
         base.OnDamage(damage, hitPosition, hitNormal);
+        UpdateUI();
         StartCoroutine(ShowBloodEffect(hitPosition, hitNormal));
     }
 
@@ -27,6 +26,15 @@ public class PlayerHealth : LivingEntity
 
     }
 
+    public override void RestoreHealth(float newHealth)
+    {
+
+        if (dead == true) return;
+
+        health += newHealth;
+        UpdateUI();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!dead)
@@ -34,7 +42,12 @@ public class PlayerHealth : LivingEntity
             IItem item = other.GetComponent<IItem>();
 
             item?.Use(gameObject);
-            
+
         }
+    }
+
+    private void UpdateUI()
+    {
+        UIManager.Instance.UpdateHealthText(dead ? 0f : health);
     }
 }

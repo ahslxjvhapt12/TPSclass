@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
-{ 
+{
     public enum State
     {
         Ready,
@@ -27,7 +27,7 @@ public class Gun : MonoBehaviour
 
 
     //오디오 소스
-    private AudioSource audioSource; 
+    private AudioSource audioSource;
     public AudioClip shootAudio;
     public AudioClip reloadAudio;
 
@@ -45,12 +45,6 @@ public class Gun : MonoBehaviour
         magAmmo = magCapacity;
         state = State.Ready;
         lastFireTime = 0f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public bool Fire()
@@ -82,8 +76,8 @@ public class Gun : MonoBehaviour
             }
             else
             {
-              //총알에 맞았지만 해당 충돌체가 데미지를 입지 않는 물체라면 메탈 효과주기
-              EffectManager.Instance.PlayHitEffect(hit.point, hit.normal, hit.transform);
+                //총알에 맞았지만 해당 충돌체가 데미지를 입지 않는 물체라면 메탈 효과주기
+                EffectManager.Instance.PlayHitEffect(hit.point, hit.normal, hit.transform);
             }
             hitPosition = hit.point;
         }
@@ -93,7 +87,7 @@ public class Gun : MonoBehaviour
         }
 
         StartCoroutine(ShotEffect(hitPosition));
-        magAmmo--;
+        UIManager.Instance.UpdateAmmoText(--magAmmo);
         if (magAmmo <= 0)
         {
             state = State.Empty;
@@ -134,9 +128,7 @@ public class Gun : MonoBehaviour
 
         yield return new WaitForSeconds(reloadTime);
         magAmmo = magCapacity;
+        UIManager.Instance.UpdateAmmoText(magAmmo);
         state = State.Ready;
     }
-
-
-
 }
